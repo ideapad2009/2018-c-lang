@@ -1,0 +1,549 @@
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE ADC
+OBJECT MODULE PLACED IN .\Output\ADC.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Code\ADC.C OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Include) DEFINE(FOSC_16
+                    -0000) DEBUG OBJECTEXTEND PRINT(.\LST\ADC.lst) TABS(2) OBJECT(.\Output\ADC.obj)
+
+line level    source
+
+   1          /*--------------------------------------------------------------------------------------------------------
+             --*/
+   2          /*                                                                                                        
+             - */
+   3          /* Copyright(c) 2017 Nuvoton Technology Corp. All rights reserved.                                        
+             - */
+   4          /*                                                                                                        
+             - */
+   5          /*--------------------------------------------------------------------------------------------------------
+             --*/
+   6          
+   7          //********************************************************************************************************
+             -***
+   8          //  Website: http://www.nuvoton.com
+   9          //  E-Mail : MicroC-8bit@nuvoton.com
+  10          //  Date   : Jan/21/2017
+  11          //********************************************************************************************************
+             -***
+  12          
+  13          //********************************************************************************************************
+             -***
+  14          //  File Function: N76E003  ADC demo code
+  15          //********************************************************************************************************
+             -***
+  16          #include "N76E003.h"
+  17          #include "SFR_Macro.h"
+  18          #include "Function_define.h"
+  19          #include "Common.h"
+  20          #include "Delay.h"
+  21          
+  22          typedef signed short int16_t;
+  23          
+  24          //*****************  The Following is in define in Fucntion_define.h  ***************************
+  25          //****** Always include Function_define.h call the define you want, detail see main(void) *******
+  26          //***********************************************************************************************
+  27          #if 0
+              //#define Enable_ADC_AIN0     ADCCON0&=0xF0;P17_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT0;ADCCON1|=SET_BIT0 
+             -                //P17
+              //#define Enable_ADC_AIN1     ADCCON0&=0xF0;ADCCON0|=0x01;P30_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT1;ADCC
+             -ON1|=SET_BIT0    //P30
+              //#define Enable_ADC_AIN2     ADCCON0&=0xF0;ADCCON0|=0x02;P07_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT2;ADCC
+             -ON1|=SET_BIT0    //P07
+              //#define Enable_ADC_AIN3     ADCCON0&=0xF0;ADCCON0|=0x03;P06_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT3;ADCC
+             -ON1|=SET_BIT0    //P06
+              //#define Enable_ADC_AIN4     ADCCON0&=0xF0;ADCCON0|=0x04;P05_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT4;ADCC
+             -ON1|=SET_BIT0    //P05
+              //#define Enable_ADC_AIN5     ADCCON0&=0xF0;ADCCON0|=0x05;P04_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT5;ADCC
+             -ON1|=SET_BIT0    //P04
+              //#define Enable_ADC_AIN6     ADCCON0&=0xF0;ADCCON0|=0x06;P03_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT6;ADCC
+             -ON1|=SET_BIT0    //P03
+              //#define Enable_ADC_AIN7     ADCCON0&=0xF0;ADCCON0|=0x07;P11_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT7;ADCC
+             -ON1|=SET_BIT0    //P11
+              //#define Enable_ADC_BandGap  ADCCON0|=SET_BIT3;ADCCON0&=0xF8;                                                              //Band-gap 1.2
+             -2V
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 2   
+
+              
+              //#define PWM0_FALLINGEDGE_TRIG_ADC   ADCCON0&=~SET_BIT5;ADCCON0&=~SET_BIT4;ADCCON1&=~SET_BIT3;ADCCON1&=~SE
+             -T_BIT2;ADCCON1|=SET_BIT1
+              //#define PWM2_FALLINGEDGE_TRIG_ADC   ADCCON0&=~SET_BIT5;ADCCON0|=SET_BIT4;ADCCON1&=~SET_BIT3;ADCCON1&=~SET
+             -_BIT2;ADCCON1|=SET_BIT1
+              //#define PWM4_FALLINGEDGE_TRIG_ADC   ADCCON0|=SET_BIT5;ADCCON0&=~SET_BIT4;ADCCON1&=~SET_BIT3;ADCCON1&=~SET
+             -_BIT2;ADCCON1|=SET_BIT1
+              //#define PWM0_RISINGEDGE_TRIG_ADC    ADCCON0&=~SET_BIT5;ADCCON0&=~SET_BIT4;ADCCON1&=~SET_BIT3;ADCCON1|=SET_
+             -BIT2;ADCCON1|=SET_BIT1
+              //#define PWM2_RISINGEDGE_TRIG_ADC    ADCCON0&=~SET_BIT5;ADCCON0|=SET_BIT4;ADCCON1&=~SET_BIT3;ADCCON1|=SET_B
+             -IT2;ADCCON1|=SET_BIT1
+              //#define PWM4_RISINGEDGE_TRIG_ADC    ADCCON0|=SET_BIT5;ADCCON0&=~SET_BIT4;ADCCON1&=~SET_BIT3;ADCCON1|=SET_B
+             -IT2;ADCCON1|=SET_BIT1
+              
+              //#define P04_FALLINGEDGE_TRIG_ADC    ADCCON0|=0x30;ADCCON1&=0xF3;ADCCON1|=SET_BIT1;ADCCON1&=~SET_BIT6
+              //#define P13_FALLINGEDGE_TRIG_ADC    ADCCON0|=0x30;ADCCON1&=0xF3;ADCCON1|=SET_BIT1;ADCCON1|=SET_BIT6
+              //#define P04_RISINGEDGE_TRIG_ADC     ADCCON0|=0x30;ADCCON1&=~SET_BIT3;ADCCON1|=SET_BIT2;ADCCON1|=SET_BIT1;A
+             -DCCON1&=~SET_BIT6
+              //#define P13_RISINGEDGE_TRIG_ADC     ADCCON0|=0x30;ADCCON1&=~SET_BIT3;ADCCON1|=SET_BIT2;ADCCON1|=SET_BIT1;A
+             -DCCON1|=SET_BIT6
+              #endif
+  50          
+  51          /*
+  52          串口通讯协议设计:
+  53          包头(2字节) +     数据长度（1字节，包括命令+数据+校验和）+ 命令码(1字节)+数据
+             -(n字节)+校验和(1字节)
+  54          包头：0x55 0x55
+  55          */
+  56          #define SERIAL_COMM_HEAD 0x55
+  57          
+  58          #define PRINT_ADC_VALUE 1
+  59          
+  60          #define KEY_MATRIX_IDEL_VOLTAGE     (4095)
+  61          #define KEY_MATRIX_CHAT_VOLTAGE     (3700)  
+  62          #define KEY_MATRIX_LED_VOLTAGE      (2440)  
+  63          #define KEY_MATRIX_VOL_UP_VOLTAGE   (950) 
+  64          #define KEY_MATRIX_VOL_DOWN_VOLTAGE   (0)   
+  65          #define KEY_MATRIX_MENU_VOLTAGE     (3385)  
+  66          #define KEY_MATRIX_PREV_VOLTAGE     (1560)  
+  67          #define KEY_MATRIX_PLAY_VOLTAGE     (3120)  
+  68          #define KEY_MATRIX_NEXT_VOLTAGE     (1950)  
+  69          #define KEY_MATRIX_STORY_VOLTAGE    (2860)  
+  70          #define KEY_MATRIX_FW_UPDATE_VOLTAGE  (1100)
+  71          #define KEY_MATRIX_VOLTAGE_ERROR    (125)//0.1V
+  72          #define KEY_MATRIX_VOLTAGE_RANGE(a,b) ((a >= ((b)-KEY_MATRIX_VOLTAGE_ERROR)) && (a <= ((b)+KEY_MATRIX_VOLT
+             -AGE_ERROR)))
+  73          #define KEY_LONG_PRESS_MS (3*1000)  //3秒
+  74          #define KEY_SHORT_PRESS_MS 500    //500ms
+  75          #define ADC_BATTERY_COUNT 500
+  76          
+  77          typedef enum
+  78          {
+  79            SERIAL_COMM_CMD_KEY = 0x01,
+  80            SERIAL_COMM_CMD_BATTERY_VOL,
+  81            SERIAL_COMM_CMD_START = 0x50,
+  82            SERIAL_COMM_CMD_SLEEP,
+  83          }SERIAL_COMM_CMD_T;
+  84          
+  85          typedef enum
+  86          {
+  87            KEY_MATRIX_IDEL=0,  //idel
+  88            KEY_MATRIX_CHAT,  //wechat    
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 3   
+
+  89            KEY_MATRIX_LED,   //led on/off  
+  90            KEY_MATRIX_VOL_UP,  //voice up  
+  91            KEY_MATRIX_VOL_DOWN,//voice down  
+  92            KEY_MATRIX_MENU,  //menu    
+  93            KEY_MATRIX_PREV,  //music preview   
+  94            KEY_MATRIX_PLAY,  //music play/pause
+  95            KEY_MATRIX_NEXT,  //music next    
+  96            KEY_MATRIX_STORY, //story inside chip 
+  97            KEY_MATRIX_FW_UPDATE//fireware update, press prev and next at the same time
+  98          }KEY_MATRIX_NUM_T;
+  99          
+ 100          
+ 101          typedef enum 
+ 102          {
+ 103              KEY_MATRIX_EVENT_TAP = 0,
+ 104            KEY_MATRIX_EVENT_PUSH,
+ 105            KEY_MATRIX_EVENT_RELEASE,
+ 106              KEY_MATRIX_EVENT_LONG_PRESSED
+ 107          }KEY_MATRIX_EVENT_T;
+ 108          
+ 109          typedef enum  
+ 110          {
+ 111            DEVICE_NOTIFY_KEY_START = 0,
+ 112            DEVICE_NOTIFY_KEY_MATRIX_CHAT_TAP,
+ 113            DEVICE_NOTIFY_KEY_MATRIX_CHAT_PUSH,
+ 114            DEVICE_NOTIFY_KEY_MATRIX_CHAT_RELEASE,
+ 115            DEVICE_NOTIFY_KEY_MATRIX_CHAT_LONGPRESSED,
+ 116          
+ 117            DEVICE_NOTIFY_KEY_MATRIX_LED_TAP,
+ 118            DEVICE_NOTIFY_KEY_MATRIX_LED_PUSH,
+ 119            DEVICE_NOTIFY_KEY_MATRIX_LED_RELEASE,
+ 120            DEVICE_NOTIFY_KEY_MATRIX_LED_LONGPRESSED,
+ 121          
+ 122            DEVICE_NOTIFY_KEY_MATRIX_VOL_UP_TAP,
+ 123            DEVICE_NOTIFY_KEY_MATRIX_VOL_UP_PUSH,
+ 124            DEVICE_NOTIFY_KEY_MATRIX_VOL_UP_RELEASE,
+ 125            DEVICE_NOTIFY_KEY_MATRIX_VOL_UP_LONGPRESSED,
+ 126          
+ 127            DEVICE_NOTIFY_KEY_MATRIX_VOL_DOWN_TAP,
+ 128            DEVICE_NOTIFY_KEY_MATRIX_VOL_DOWN_PUSH,
+ 129            DEVICE_NOTIFY_KEY_MATRIX_VOL_DOWN_RELEASE,
+ 130            DEVICE_NOTIFY_KEY_MATRIX_VOL_DOWN_LONGPRESSED,
+ 131          
+ 132            DEVICE_NOTIFY_KEY_MATRIX_MENU_TAP,
+ 133            DEVICE_NOTIFY_KEY_MATRIX_MENU_PUSH,
+ 134            DEVICE_NOTIFY_KEY_MATRIX_MENU_RELEASE,
+ 135            DEVICE_NOTIFY_KEY_MATRIX_MENU_LONGPRESSED,
+ 136          
+ 137            DEVICE_NOTIFY_KEY_MATRIX_PREV_TAP,
+ 138            DEVICE_NOTIFY_KEY_MATRIX_PREV_PUSH,
+ 139            DEVICE_NOTIFY_KEY_MATRIX_PREV_RELEASE,
+ 140            DEVICE_NOTIFY_KEY_MATRIX_PREV_LONGPRESSED,
+ 141          
+ 142            DEVICE_NOTIFY_KEY_MATRIX_PLAY_TAP,
+ 143            DEVICE_NOTIFY_KEY_MATRIX_PLAY_PUSH,
+ 144            DEVICE_NOTIFY_KEY_MATRIX_PLAY_RELEASE,
+ 145            DEVICE_NOTIFY_KEY_MATRIX_PLAY_LONGPRESSED,
+ 146          
+ 147            DEVICE_NOTIFY_KEY_MATRIX_NEXT_TAP,
+ 148            DEVICE_NOTIFY_KEY_MATRIX_NEXT_PUSH,
+ 149            DEVICE_NOTIFY_KEY_MATRIX_NEXT_RELEASE,
+ 150            DEVICE_NOTIFY_KEY_MATRIX_NEXT_LONGPRESSED,
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 4   
+
+ 151          
+ 152            DEVICE_NOTIFY_KEY_MATRIX_STORY_TAP,
+ 153            DEVICE_NOTIFY_KEY_MATRIX_STORY_PUSH,
+ 154            DEVICE_NOTIFY_KEY_MATRIX_STORY_RELEASE,
+ 155            DEVICE_NOTIFY_KEY_MATRIX_STORY_LONGPRESSED,
+ 156          
+ 157            DEVICE_NOTIFY_KEY_MATRIX_FW_UPDATE_TAP,
+ 158            DEVICE_NOTIFY_KEY_MATRIX_FW_UPDATE_PUSH,
+ 159            DEVICE_NOTIFY_KEY_MATRIX_FW_UPDATE_RELEASE,
+ 160            DEVICE_NOTIFY_KEY_MATRIX_FW_UPDATE_LONGPRESSED,
+ 161            
+ 162            DEVICE_NOTIFY_KEY_END,
+ 163          }DEVICE_NOTIFY_KEY_T;
+ 164          
+ 165          typedef struct {
+ 166            uint8_t curr_key_num; //current key num
+ 167            uint8_t last_key_num; //last key num
+ 168            uint32_t key_hold_ms; //key press hold time
+ 169            uint8_t key_hold_flag;  //
+ 170          } key_matrix_t;
+ 171          
+ 172          
+ 173          /******************************************************************************
+ 174          The main C function.  Program execution starts
+ 175          here after stack initialization.
+ 176          ******************************************************************************/
+ 177          
+ 178          //获取键盘电压值
+ 179          int16_t get_adc_keyborad_value(void)
+ 180          {
+ 181   1        int16_t adc_value = 0;
+ 182   1        
+ 183   1        Enable_ADC_AIN0;// Enable AIN0 P1.7 as ADC input
+ 184   1        clr_ADCF;
+ 185   1        set_ADCS;                 // ADC start trig signal
+ 186   1        while(ADCF == 0);
+ 187   1        adc_value = ADCRH;
+ 188   1        adc_value = adc_value << 4 | ADCRL;
+ 189   1      #if PRINT_ADC_VALUE == 1
+ 190   1        //printf ("keyborad:%d\n", adc_value);
+ 191   1        //printf ("%bx%bx\n", ADCRH,ADCRL);
+ 192   1      #endif
+ 193   1      
+ 194   1        return adc_value;
+ 195   1      }
+ 196          
+ 197          //获取电池电压值
+ 198          int16_t get_adc_battery_value(void)
+ 199          {
+ 200   1        int16_t adc_value = 0;
+ 201   1        
+ 202   1        Enable_ADC_AIN1;// Enable AIN1 P3.0 as ADC input
+ 203   1        clr_ADCF;
+ 204   1        set_ADCS;                 // ADC start trig signal
+ 205   1        while(ADCF == 0);
+ 206   1        adc_value = ADCRH;
+ 207   1        adc_value = adc_value << 4 | ADCRL;
+ 208   1      #if PRINT_ADC_VALUE == 1
+ 209   1        //printf ("battery:%d\n", adc_value);
+ 210   1        //printf ("%bx%bx\n", ADCRH,ADCRL);
+ 211   1      #endif
+ 212   1      
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 5   
+
+ 213   1        return adc_value;
+ 214   1      }
+ 215          
+ 216          void uart_send_data(uint8_t _cmd, uint8_t *_data, uint8_t _data_len)
+ 217          {
+ 218   1        uint8_t i = 0;
+ 219   1        uint8_t sum = 0;
+ 220   1        
+ 221   1        Send_Data_To_UART0(SERIAL_COMM_HEAD);
+ 222   1        sum += SERIAL_COMM_HEAD;
+ 223   1        Send_Data_To_UART0(SERIAL_COMM_HEAD);
+ 224   1        sum += SERIAL_COMM_HEAD;
+ 225   1        Send_Data_To_UART0(_data_len+2);
+ 226   1        sum += _data_len+2;
+ 227   1        Send_Data_To_UART0(_cmd);
+ 228   1        sum += _cmd;
+ 229   1        for (i=0; i<_data_len; i++)
+ 230   1        {
+ 231   2          Send_Data_To_UART0(*(_data+i));
+ 232   2          sum += *(_data+i);
+ 233   2        }
+ 234   1        Send_Data_To_UART0(sum);
+ 235   1      }
+ 236          
+ 237          void uart_send_key_cmd(
+ 238            uint8_t _key_num, uint8_t _key_event)
+ 239          { 
+ 240   1        uint8_t event = 0;
+ 241   1        switch (_key_num)
+ 242   1        {
+ 243   2          case KEY_MATRIX_CHAT: //wechat    
+ 244   2          {
+ 245   3            event = DEVICE_NOTIFY_KEY_MATRIX_CHAT_TAP;
+ 246   3            break;
+ 247   3          }
+ 248   2          case KEY_MATRIX_LED:    //led on/off  
+ 249   2          {
+ 250   3            event = DEVICE_NOTIFY_KEY_MATRIX_LED_TAP;
+ 251   3            break;
+ 252   3          }
+ 253   2          case KEY_MATRIX_VOL_UP: //voice up  
+ 254   2          {
+ 255   3            event = DEVICE_NOTIFY_KEY_MATRIX_VOL_UP_TAP;
+ 256   3            break;
+ 257   3          }
+ 258   2          case KEY_MATRIX_VOL_DOWN://voice down 
+ 259   2          {
+ 260   3            event = DEVICE_NOTIFY_KEY_MATRIX_VOL_DOWN_TAP;
+ 261   3            break;
+ 262   3          }
+ 263   2          case KEY_MATRIX_MENU: //menu    
+ 264   2          {
+ 265   3            event = DEVICE_NOTIFY_KEY_MATRIX_MENU_TAP;
+ 266   3            break;
+ 267   3          }
+ 268   2          case KEY_MATRIX_PREV: //music preview   
+ 269   2          {
+ 270   3            event = DEVICE_NOTIFY_KEY_MATRIX_PREV_TAP;
+ 271   3            break;
+ 272   3          }
+ 273   2          case KEY_MATRIX_PLAY: //music play/pause
+ 274   2          {
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 6   
+
+ 275   3            event = DEVICE_NOTIFY_KEY_MATRIX_PLAY_TAP;
+ 276   3            break;
+ 277   3          }
+ 278   2          case KEY_MATRIX_NEXT: //music next    
+ 279   2          {
+ 280   3            event = DEVICE_NOTIFY_KEY_MATRIX_NEXT_TAP;
+ 281   3            break;
+ 282   3          }
+ 283   2          case KEY_MATRIX_STORY:  //story inside chip 
+ 284   2          {
+ 285   3            event = DEVICE_NOTIFY_KEY_MATRIX_STORY_TAP;
+ 286   3            break;
+ 287   3          }
+ 288   2          case KEY_MATRIX_FW_UPDATE://fireware update, press prev and next at the same time
+ 289   2          {
+ 290   3            event = DEVICE_NOTIFY_KEY_MATRIX_FW_UPDATE_TAP;
+ 291   3            break;
+ 292   3          }
+ 293   2          default:
+ 294   2            return;
+ 295   2            break;
+ 296   2        }
+ 297   1      
+ 298   1        switch (_key_event)
+ 299   1        {
+ 300   2          case KEY_MATRIX_EVENT_TAP:
+ 301   2          {
+ 302   3            break;
+ 303   3          }
+ 304   2          case KEY_MATRIX_EVENT_PUSH:
+ 305   2          {
+ 306   3            event += KEY_MATRIX_EVENT_PUSH - KEY_MATRIX_EVENT_TAP;
+ 307   3            break;
+ 308   3          }
+ 309   2          case KEY_MATRIX_EVENT_RELEASE:
+ 310   2          {
+ 311   3            event += KEY_MATRIX_EVENT_RELEASE - KEY_MATRIX_EVENT_TAP;
+ 312   3            break;
+ 313   3          }
+ 314   2          case KEY_MATRIX_EVENT_LONG_PRESSED:
+ 315   2          {
+ 316   3            event += KEY_MATRIX_EVENT_LONG_PRESSED - KEY_MATRIX_EVENT_TAP;
+ 317   3            break;
+ 318   3          }
+ 319   2          default:
+ 320   2            return;
+ 321   2            break;
+ 322   2        }
+ 323   1        uart_send_data(SERIAL_COMM_CMD_KEY, &event, 1);
+ 324   1      }
+ 325          
+ 326          
+ 327          void adc_keyborad_process(key_matrix_t *_key_matrix)
+ 328          { 
+ 329   1        int16_t adc_keyboard_value = get_adc_keyborad_value();
+ 330   1        
+ 331   1        if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_IDEL_VOLTAGE))
+ 332   1        {
+ 333   2          //printf("keyboard matrix:KEY_MATRIX_IDEL\n");
+ 334   2          _key_matrix->curr_key_num = KEY_MATRIX_IDEL; 
+ 335   2        }
+ 336   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_CHAT_VOLTAGE))
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 7   
+
+ 337   1        {
+ 338   2          //printf("keyboard matrix:KEY_MATRIX_CHAT\n");
+ 339   2          _key_matrix->curr_key_num = KEY_MATRIX_CHAT; 
+ 340   2        }
+ 341   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_LED_VOLTAGE))
+ 342   1        {
+ 343   2          //printf("keyboard matrix:KEY_MATRIX_LED\n");
+ 344   2          _key_matrix->curr_key_num = KEY_MATRIX_LED;
+ 345   2        }
+ 346   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_VOL_UP_VOLTAGE))
+ 347   1        {
+ 348   2          //printf("keyboard matrix:KEY_MATRIX_VOL_UP\n");
+ 349   2          _key_matrix->curr_key_num = KEY_MATRIX_VOL_UP; 
+ 350   2        }
+ 351   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_VOL_DOWN_VOLTAGE))
+ 352   1        {
+ 353   2          //printf("keyboard matrix:KEY_MATRIX_VOL_DOWN\n");
+ 354   2          _key_matrix->curr_key_num = KEY_MATRIX_VOL_DOWN;
+ 355   2        }
+ 356   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_MENU_VOLTAGE))
+ 357   1        {
+ 358   2          //printf("keyboard matrix:KEY_MATRIX_MENU\n");
+ 359   2          _key_matrix->curr_key_num = KEY_MATRIX_MENU;
+ 360   2        }
+ 361   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_PREV_VOLTAGE))
+ 362   1        {
+ 363   2          //printf("keyboard matrix:KEY_MATRIX_PREV\n");
+ 364   2          _key_matrix->curr_key_num = KEY_MATRIX_PREV;
+ 365   2        }
+ 366   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_PLAY_VOLTAGE))
+ 367   1        {
+ 368   2          //printf("keyboard matrix:KEY_MATRIX_PLAY\n");
+ 369   2          _key_matrix->curr_key_num = KEY_MATRIX_PLAY; 
+ 370   2        }
+ 371   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_NEXT_VOLTAGE))
+ 372   1        {
+ 373   2          //printf("keyboard matrix:KEY_MATRIX_NEXT\n");
+ 374   2          _key_matrix->curr_key_num = KEY_MATRIX_NEXT; 
+ 375   2        }
+ 376   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_STORY_VOLTAGE))
+ 377   1        {
+ 378   2          //printf("keyboard matrix:KEY_MATRIX_STORY\n");
+ 379   2          _key_matrix->curr_key_num = KEY_MATRIX_STORY; 
+ 380   2        }
+ 381   1        else if (KEY_MATRIX_VOLTAGE_RANGE(adc_keyboard_value, KEY_MATRIX_FW_UPDATE_VOLTAGE))
+ 382   1        {
+ 383   2          //printf("keyboard matrix:KEY_MATRIX_FW_UPDATE\n");
+ 384   2          _key_matrix->curr_key_num = KEY_MATRIX_FW_UPDATE;
+ 385   2        }
+ 386   1        else
+ 387   1        {
+ 388   2          goto adc_keyborad_process_error;
+ 389   2        }
+ 390   1      
+ 391   1        _key_matrix->key_hold_ms += 10;
+ 392   1        if (_key_matrix->curr_key_num == _key_matrix->last_key_num)
+ 393   1        {
+ 394   2          if (_key_matrix->curr_key_num != KEY_MATRIX_IDEL)
+ 395   2          {
+ 396   3            if (_key_matrix->key_hold_ms >= KEY_LONG_PRESS_MS && _key_matrix->key_hold_flag == 0)
+ 397   3            {
+ 398   4              uart_send_key_cmd(_key_matrix->curr_key_num, KEY_MATRIX_EVENT_LONG_PRESSED);
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 8   
+
+ 399   4              _key_matrix->key_hold_flag = 1;
+ 400   4            }
+ 401   3          }
+ 402   2        }
+ 403   1        else
+ 404   1        { 
+ 405   2          //key press flow, KEY_MATRIX_IDEL -> any key -> KEY_MATRIX_IDEL
+ 406   2          switch (_key_matrix->curr_key_num)
+ 407   2          {
+ 408   3            case KEY_MATRIX_IDEL:
+ 409   3            {
+ 410   4              uart_send_key_cmd(_key_matrix->last_key_num, KEY_MATRIX_EVENT_RELEASE);
+ 411   4              
+ 412   4              if (_key_matrix->key_hold_ms <= KEY_SHORT_PRESS_MS)
+ 413   4              {
+ 414   5                uart_send_key_cmd(_key_matrix->last_key_num, KEY_MATRIX_EVENT_TAP);
+ 415   5              }
+ 416   4              else if (_key_matrix->key_hold_ms >= KEY_LONG_PRESS_MS && _key_matrix->key_hold_flag == 0)
+ 417   4              {
+ 418   5                uart_send_key_cmd(_key_matrix->last_key_num, KEY_MATRIX_EVENT_LONG_PRESSED);
+ 419   5              }
+ 420   4              _key_matrix->key_hold_flag = 0;
+ 421   4              break;
+ 422   4            }
+ 423   3            case KEY_MATRIX_CHAT:
+ 424   3            case KEY_MATRIX_LED:  
+ 425   3            case KEY_MATRIX_VOL_UP:
+ 426   3            case KEY_MATRIX_VOL_DOWN:
+ 427   3            case KEY_MATRIX_MENU:
+ 428   3            case KEY_MATRIX_PREV:   
+ 429   3            case KEY_MATRIX_PLAY:
+ 430   3            case KEY_MATRIX_NEXT:   
+ 431   3            case KEY_MATRIX_STORY:
+ 432   3            case KEY_MATRIX_FW_UPDATE:
+ 433   3            {
+ 434   4              uart_send_key_cmd(_key_matrix->curr_key_num, KEY_MATRIX_EVENT_PUSH);
+ 435   4              break;
+ 436   4            }
+ 437   3            default:
+ 438   3              break;
+ 439   3          }
+ 440   2          _key_matrix->key_hold_ms = 0;
+ 441   2          _key_matrix->last_key_num = _key_matrix->curr_key_num;
+ 442   2        }
+ 443   1        
+ 444   1      adc_keyborad_process_error:
+ 445   1      
+ 446   1        return;
+ 447   1      }
+ 448          
+ 449          void adc_battery_vol_process(void)
+ 450          {
+ 451   1        static uint32_t count = 0;
+ 452   1        static uint32_t adc_battery_value = 0;
+ 453   1        uint16_t adc_battery_vol = 0;
+ 454   1      
+ 455   1        adc_battery_value += get_adc_battery_value();
+ 456   1        count++;
+ 457   1        if (count == ADC_BATTERY_COUNT)
+ 458   1        {
+ 459   2          adc_battery_vol = adc_battery_value/ ADC_BATTERY_COUNT;
+ 460   2          uart_send_data(SERIAL_COMM_CMD_BATTERY_VOL, (uint8_t*)&adc_battery_vol, 2);
+C51 COMPILER V9.53.0.0   ADC                                                               12/29/2017 14:50:55 PAGE 9   
+
+ 461   2          count = 0;
+ 462   2          adc_battery_value = 0;
+ 463   2        }
+ 464   1      }
+ 465          
+ 466          void main (void) 
+ 467          {
+ 468   1        key_matrix_t key_matrix = {0};
+ 469   1        
+ 470   1        //串口初始化
+ 471   1        InitialUART0_Timer1(115200);
+ 472   1        
+ 473   1        while(1)
+ 474   1        {
+ 475   2          adc_keyborad_process(&key_matrix);
+ 476   2          adc_battery_vol_process();
+ 477   2          Timer0_Delay1ms(10);
+ 478   2        }
+ 479   1      }
+ 480          
+ 481          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1235    ----
+   CONSTANT SIZE    =      7    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8      20
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

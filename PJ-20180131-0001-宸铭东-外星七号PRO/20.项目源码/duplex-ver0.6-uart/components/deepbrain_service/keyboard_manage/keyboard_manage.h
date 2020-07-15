@@ -1,0 +1,73 @@
+#ifndef _KEYBOARD_MATRIX_H_
+#define _KEYBOARD_MATRIX_H_
+
+#include "driver/gpio.h"
+#include "userconfig.h"
+
+//key event enum
+typedef enum  
+{
+	DEVICE_KEY_START = 0,
+		
+	DEVICE_KEY_CHAT_START,
+	DEVICE_KEY_CHAT_STOP,
+
+	DEVICE_KEY_PREV_START,
+	DEVICE_KEY_PREV_STOP,
+
+	DEVICE_KEY_PLAY_START,
+	DEVICE_KEY_PLAY_STOP,
+
+	DEVICE_KEY_NEXT_START,
+	DEVICE_KEY_NEXT_STOP,
+
+	DEVICE_KEY_VOL_DOWN_START,
+	DEVICE_KEY_VOL_DOWN_STOP,
+
+	DEVICE_KEY_VOL_UP_START,
+	DEVICE_KEY_VOL_UP_STOP,
+
+	DEVICE_KEY_WECHAT_START,
+	DEVICE_KEY_WECHAT_STOP,
+
+	DEVICE_KEY_ESP32_START,
+	DEVICE_KEY_ESP32_STOP,
+
+	DEVICE_KEY_COLLECTION_START,
+	DEVICE_KEY_COLLECTION_STOP,
+
+	DEVICE_KEY_PLAY_COLLECTION_START,
+	DEVICE_KEY_PLAY_COLLECTION_STOP,
+
+	DEVICE_KEY_PLAY_NEWS_START,
+	DEVICE_KEY_PLAY_NEWS_STOP,
+
+	DEVICE_KEY_WIFI_SET_START,
+	DEVICE_KEY_WIFI_SET_STOP,
+
+	DEVICE_KEY_CH2EN_START,
+	DEVICE_KEY_CH2EN_STOP,
+
+	DEVICE_KEY_EN2CH_START,
+	DEVICE_KEY_EN2CH_STOP,
+
+	DEVICE_KEY_LOW_POWER,
+
+	DEVICE_KEY_ROBOT_OFF,
+	
+	DEVICE_KEY_MIC_IN,
+
+	DEVICE_KEY_MIC_OUT,
+	
+	DEVICE_KEY_END,
+}DEVICE_KEY_EVENT_T;
+
+typedef void (* key_matrix_cb)(DEVICE_KEY_EVENT_T key_event);
+typedef void (* battery_cb)(float _battery_vol);
+typedef void* key_matrix_handle_t;
+
+key_matrix_handle_t adc_keyboard_matrix_init(key_matrix_cb _cb, battery_cb bat_cb);
+void adc_keyboard_matrix_free(key_matrix_handle_t _handle);
+
+#endif
+

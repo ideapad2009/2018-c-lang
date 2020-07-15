@@ -1,0 +1,11 @@
+#
+# Component Makefile
+
+COMPONENT_ADD_INCLUDEDIRS := include
+
+LIBS := mpush
+
+COMPONENT_ADD_LDFLAGS := $(COMPONENT_PATH)/lib/libmpush.a \
+
+
+COMPONENT_ADD_LINKER_DEPS := $(patsubst %,$(COMPONENT_PATH)/lib/lib%.a,$(LIBS))

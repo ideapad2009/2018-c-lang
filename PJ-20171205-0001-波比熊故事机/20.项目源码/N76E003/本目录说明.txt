@@ -1,0 +1,5 @@
+本目录内的例程文件，来自新唐官方，下载地址
+http://www.nuvoton.com/hq/resource-download.jsp?tp_GUID=SW0720170213111242
+
+我们仅对I2C_EEPROM例程做了简单修改(如何修改的，单板使用说明书有介绍)。
+其他例程未作任何修改。如果在本单板使用，请根据《RM_N76E003 CMSIS BSP Guide v1.01.pdf》和例程中代码实际设计情况进行修改。我们不提供技术支持。

@@ -1,0 +1,91 @@
+#if 0
+#ifndef COLLECTION_FUNCTION_H
+#define COLLECTION_FUNCTION_H
+
+#include "flash_config_manage.h"
+
+#define URL_SIZE				96	//url大小
+#define URL_MAX				    20	//url最大存储数
+
+#define URL_NULL				11	//url为空
+
+
+#define CAN_SAVE			1
+
+typedef enum SAVE_INDEX_NUM
+{
+	SAVE_INDEX_NUM_ONE = 1,
+	SAVE_INDEX_NUM_TWO,
+	SAVE_INDEX_NUM_THREE,
+	SAVE_INDEX_NUM_FOUR,
+	SAVE_INDEX_NUM_FIVE,
+	SAVE_INDEX_NUM_SIX,
+	SAVE_INDEX_NUM_SEVEN,
+	SAVE_INDEX_NUM_EIGHT,
+	SAVE_INDEX_NUM_NINE,
+	SAVE_INDEX_NUM_TEN,
+	SAVE_INDEX_NUM_ELEVEN,
+	SAVE_INDEX_NUM_TWELVE,
+	SAVE_INDEX_NUM_THIRTEEN,
+	SAVE_INDEX_NUM_FOURTEEN,
+	SAVE_INDEX_NUM_FIFTEEN,
+	SAVE_INDEX_NUM_SIXTEEN,
+	SAVE_INDEX_NUM_SEVENTEEN,
+	SAVE_INDEX_NUM_EIGHTEEN,
+	SAVE_INDEX_NUM_NINETEEN,
+	SAVE_INDEX_NUM_TWENTY,
+}SAVE_INDEX_NUM;
+
+typedef enum PLAY_INDEX_NUM
+{
+	PLAY_INDEX_NUM_ONE = 1,
+	PLAY_INDEX_NUM_TWO,
+	PLAY_INDEX_NUM_THREE,
+	PLAY_INDEX_NUM_FOUR,
+	PLAY_INDEX_NUM_FIVE,
+	PLAY_INDEX_NUM_SIX,
+	PLAY_INDEX_NUM_SEVEN,
+	PLAY_INDEX_NUM_EIGHT,
+	PLAY_INDEX_NUM_NINE,
+	PLAY_INDEX_NUM_TEN,
+	PLAY_INDEX_NUM_ELEVEN,
+	PLAY_INDEX_NUM_TWELVE,
+	PLAY_INDEX_NUM_THIRTEEN,
+	PLAY_INDEX_NUM_FOURTEEN,
+	PLAY_INDEX_NUM_FIFTEEN,
+	PLAY_INDEX_NUM_SIXTEEN,
+	PLAY_INDEX_NUM_SEVENTEEN,
+	PLAY_INDEX_NUM_EIGHTEEN,
+	PLAY_INDEX_NUM_NINETEEN,
+	PLAY_INDEX_NUM_TWENTY,
+}PLAY_INDEX_NUM;
+
+typedef enum EXCLUDE_RET
+{
+	EXCLUDE_RET_INITIAL,
+	EXCLUDE_RET_EXIST,
+	EXCLUDE_RET_NOT_EXIST,
+}EXCLUDE_RET_E;
+
+typedef struct 
+{
+	uint8_t url[URL_SIZE];         //保存url
+}URL_T;
+
+typedef struct 
+{
+	uint    url_num;               //当前数量
+	URL_T   url_array[URL_MAX];   
+}COLLECTION_URL_T;
+
+extern char *g_music_url;
+extern int g_save_signal;
+int init_collection_function();
+void save_function();
+void play_function_start();
+void print_saved_url();
+void trigger_key_next();
+void trigger_key_prev();
+esp_err_t get_collection_infos();
+#endif
+#endif

@@ -1,0 +1,25 @@
+static void ter_adcset(void* ref, int argc, char* argv[])
+{
+    int curVol = 0;
+    if (argv[0]) {
+        char num[10] = "";
+        strncpy(num, argv[0], 9);
+        curVol = atoi(num);
+    }
+    int atten = 3;
+    if (argv[1]) {
+        char num[10] = "";
+        strncpy(num, argv[1], 9);
+        atten = atoi(num);
+    }
+    esp_adc1_vref_calibrate(ADC_WIDTH_12Bit, atten, ADC1_CHANNEL_3, curVol);
+}
+
+static void ter_adc(void* ref, int argc, char* argv[])
+{
+    TerminalControlService* term = (TerminalControlService*)ref;
+    esp_adc1_cali_config(ADC_WIDTH_12Bit, ADC_ATTEN_11db, ADC1_CHANNEL_3);
+    printf("adc:%d\r\n", get_adc_voltage());
+}
+
+#define EFUSE_TEST 1  // For Debug,1: it will not write EFUSE
